@@ -1,0 +1,1 @@
+export './int+screen_adapt.dart';
