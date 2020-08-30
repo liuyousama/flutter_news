@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_news/ui/pages/sign_in/sign_in.dart';
 import 'package:flutter_news/ui/pages/welcome/welcome.dart';
 
 class LYRoute {
   static const initialRoute = LYWelcomePage.routeName;
 
   static final routes = {
-    LYWelcomePage.routeName: (context) => LYWelcomePage()
+    LYWelcomePage.routeName: (context) => LYWelcomePage(),
+    LYSignInPage.routeName: (context) => LYSignInPage()
   };
 
   // ignore: top_level_function_literal_block

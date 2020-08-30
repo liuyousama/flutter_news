@@ -3,6 +3,7 @@ import 'package:flutter_news/core/extensions/extension.dart';
 
 import 'package:flutter_news/core/color/color.dart';
 import 'package:flutter_news/core/utils/screen_util.dart';
+import 'package:flutter_news/ui/pages/sign_in/sign_in.dart';
 
 const _headerDetailText = "The best of news channels all in one place. Trusted sources and personalized news for you.";
 const _featureText1 = "Compelling photography and typography provide a beautiful reading";
@@ -93,7 +94,10 @@ class LYWelcomePage extends StatelessWidget {
         color: LYAppColor(context).primaryElement,
         textColor: LYAppColor(context).primaryElementText,
         child: Text("Get Started", style: TextStyle(fontSize: 18.lyFont)),
-        onPressed: ()=>print("点击了开始按钮"),
+        onPressed: (){
+          Navigator.of(context).pushNamed(LYSignInPage.routeName);
+          print("点击了开始按钮");
+        },
       ),
     );
   }
