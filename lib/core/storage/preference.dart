@@ -8,31 +8,37 @@ class LYPreference {
     _preferences = await SharedPreferences.getInstance();
   }
 
-  static setJson(String key, Map<String, dynamic> value) {
+  static remove(String key) {
+    _preferences.remove(key);
+  }
+  static setJson(String key, dynamic value) {
     assetInited();
     if (value == null){
       _preferences.remove(key);
       return;
     }
     final jsonStr = JsonEncoder().convert(value);
+    if (jsonStr == null) return;
     _preferences.setString(key, jsonStr);
   }
-
+  static getJson(String key) {
+    assetInited();
+    final data = _preferences.get(key);
+    if (data == null) {return null;}
+    final json = JsonDecoder().convert(data);
+    return json;
+  }
   static setBool(String key, bool value) {
     assetInited();
+    if (value == null) {
+      _preferences.remove(key);
+      return;
+    }
     _preferences.setBool(key, value);
   }
   static getBool(String key) {
     assetInited();
     return _preferences.getBool(key);
-  }
-
-  static getJson(String key) {
-    assetInited();
-    final data = _preferences.get(key);
-    if (data == null) {return null;}
-    final jsonMap = JsonDecoder().convert(data);
-    return jsonMap;
   }
 
   static assetInited() {

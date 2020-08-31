@@ -1,25 +1,29 @@
 import 'package:flutter_news/core/storage/preference.dart';
+import 'package:flutter_news/core/storage/storage_key.dart';
 import 'package:flutter_news/core/storage/user_profile.dart';
 
 const ShowWelcomeStorageKey = "com.liuyousama.news.preference.showWelcome";
 
 class GlobalStorage {
+  /// 本地存储用户登录信息
   static UserProfile _userProfile;
   static UserProfile get userProfile {
     if (_userProfile == null) {
-      _userProfile = UserProfile.fromStorage();
+      final json = LYPreference.getJson(StorageKey.UserProfile);
+      if (json == null) {return null;}
+      _userProfile = UserProfile.fromJson(json);
     }
     return _userProfile;
   }
   static set userProfile(UserProfile profile) {
     _userProfile = profile;
     if (_userProfile==null) {
-      LYPreference.setJson(UserProfile.storageKey, null);
-      return;
+      LYPreference.remove(StorageKey.UserProfile);
+    } else {
+      LYPreference.setJson(StorageKey.UserProfile, _userProfile.toJson());
     }
-    profile.toStorage();
   }
-
+  /// 本地存储欢迎页是否显示
   static bool _showWelcome;
   static bool get showWelcome {
     if (_showWelcome == null) {
@@ -28,6 +32,7 @@ class GlobalStorage {
     return _showWelcome;
   }
   static set showWelcome(bool value) {
+    if (value == null) return;
     _showWelcome = value;
     LYPreference.setBool(ShowWelcomeStorageKey, value);
   }

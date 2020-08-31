@@ -26,15 +26,4 @@ class UserProfile {
     "display_name": displayName,
     "channels": List<dynamic>.from(channels.map((x) => x)),
   };
-
-  static UserProfile fromStorage() {
-    final json = LYPreference.getJson(storageKey);
-    if (json == null) return null;
-    return UserProfile.fromJson(json);
-  }
-
-  toStorage() {
-    final json = this.toJson();
-    LYPreference.setJson(storageKey, json);
-  }
 }
