@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_news/core/model/error_model.dart';
 import 'package:flutter_news/core/network/consts.dart';
+import 'package:flutter_news/core/network/ram_cache.dart';
 import 'package:flutter_news/core/storage/global_storage.dart';
 
 class LYHttp {
@@ -35,8 +36,8 @@ class LYHttp {
 
     _dio.interceptors.add(InterceptorsWrapper(onRequest: (options) {
       print("发起请求");
-      final token = GlobalStorage.userProfile.accessToken;
-      options.headers["Authorization"] = token;
+      final userProfile = GlobalStorage.userProfile;
+      if (userProfile != null) options.headers["Authorization"] = userProfile.accessToken;
       return options;
     }, onResponse: (res) {
       print("收到响应");
@@ -45,20 +46,32 @@ class LYHttp {
       print("发生错误: $e");
       return e;
     }));
+    // 添加内存缓存interceptor
+    _dio.interceptors.add(LYRamCache());
   }
 
-  Future get(String path,{Map<String,dynamic> query, Options options,
-        CancelToken cancelToken, ProgressCallback progressCallback}) async
-  {
+  Future get(String path, {
+    Map<String, dynamic> query,
+    Options options,
+    CancelToken cancelToken,
+    bool isRefresh = false,
+    bool isList = false,
+    bool cacheOpen = true,
+    String cacheKey
+  }) async {
     try {
+      options = options ?? Options();
+      options.extra["refresh"] = isRefresh;
+      options.extra["list"] = isList;
+      options.extra["cache"] = cacheOpen;
+      options.extra["cacheKey"] = cacheKey;
       var response = await _dio.get(path,
-          queryParameters: query,
-          options: options,
-          cancelToken: cancelToken,
-          onReceiveProgress: progressCallback
+        queryParameters: query,
+        options: options,
+        cancelToken: cancelToken,
       );
       return response.data;
-    } on DioError catch (e) {
+    } on DioError catch(e) {
       throw _createErrorModel(e);
     }
   }
@@ -75,6 +88,7 @@ class LYHttp {
       );
       return response.data;
     } on DioError catch(e) {
+      print(e);
       throw _createErrorModel(e);
     }
   }

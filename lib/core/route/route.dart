@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_news/core/storage/global_storage.dart';
 import 'package:flutter_news/core/utils/screen_util.dart';
+import 'package:flutter_news/ui/pages/home/home.dart';
 import 'package:flutter_news/ui/pages/sign_in/sign_in.dart';
 import 'package:flutter_news/ui/pages/sign_up/sign_up.dart';
 import 'package:flutter_news/ui/pages/welcome/welcome.dart';
@@ -12,7 +13,8 @@ class LYRoute {
   static final routes = {
     LYWelcomePage.routeName: (context) => LYWelcomePage(),
     LYSignInPage.routeName: (context) => LYSignInPage(),
-    LYSignUpPage.routeName: (context) => LYSignUpPage()
+    LYSignUpPage.routeName: (context) => LYSignUpPage(),
+    LYHomePage.routeName: (context) => LYHomePage()
   };
 
   // ignore: top_level_function_literal_block
@@ -34,7 +36,7 @@ class LYRoute {
       else if (!welcome && user == null) {
         return LYSignInPage();
       } else {
-        return LYSignUpPage();
+        return LYHomePage();
       }
     })];
   };

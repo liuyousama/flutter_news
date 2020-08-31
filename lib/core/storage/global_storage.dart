@@ -1,6 +1,6 @@
 import 'package:flutter_news/core/storage/preference.dart';
 import 'package:flutter_news/core/storage/storage_key.dart';
-import 'package:flutter_news/core/storage/user_profile.dart';
+import 'package:flutter_news/core/model/user/user_profile.dart';
 
 const ShowWelcomeStorageKey = "com.liuyousama.news.preference.showWelcome";
 

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_news/core/color/color.dart';
 import 'package:flutter_news/core/extensions/extension.dart';
+import 'package:flutter_news/core/model/error_model.dart';
+import 'package:flutter_news/core/network/api/user.dart';
+import 'package:flutter_news/core/storage/global_storage.dart';
 import 'package:flutter_news/core/utils/screen_util.dart';
 import 'package:flutter_news/core/utils/validator.dart';
+import 'package:flutter_news/ui/pages/home/home.dart';
 import 'package:flutter_news/ui/widgets/sign_in_social.dart';
 import 'package:flutter_news/ui/widgets/toast.dart';
 
@@ -240,9 +244,15 @@ class _LYSignInPageState extends State<LYSignInPage> {
     if (!isEmail(email)) {await LYToast.showToast(context, "请输入正确的邮箱地址");signDisabled=false;return;}
     if (pwd == null||pwd.isEmpty) {await LYToast.showToast(context, "请输入密码");signDisabled=false;return;}
     if (pwd.length<8||pwd.length>16) {await LYToast.showToast(context, "密码错误");signDisabled=false;return;}
-
-    signDisabled = false;
-    return;
+    try {
+      final user = await loginUser(email, pwd);
+      GlobalStorage.userProfile = user;
+      Navigator.pushReplacementNamed(context, LYHomePage.routeName);
+    } on LYErrorModel catch(e) {
+      await LYToast.showToast(context, e.toString());
+      signDisabled = false;
+      return;
+    }
   }
 
   _handleSignUp() {
