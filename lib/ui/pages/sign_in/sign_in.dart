@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_news/core/color/color.dart';
 import 'package:flutter_news/core/extensions/extension.dart';
+import 'package:flutter_news/core/utils/validator.dart';
+import 'package:flutter_news/ui/widgets/sign_in_social.dart';
+import 'package:flutter_news/ui/widgets/toast.dart';
 
 class LYSignInPage extends StatefulWidget {
   static const routeName = "/signin";
@@ -13,6 +16,8 @@ class _LYSignInPageState extends State<LYSignInPage> {
   final emailController = TextEditingController();
   final pwdController = TextEditingController();
 
+  var signDisabled = false;
+  var pwdSecure = true;
   @override
   Widget build(BuildContext context) {
     // GestureDetector: 点击界面空白处回收键盘
@@ -22,17 +27,18 @@ class _LYSignInPageState extends State<LYSignInPage> {
         backgroundColor: LYAppColor(context).primaryBackground,
         // SingleChildScrollView: 键盘弹出时，界面可滚动
         body: SingleChildScrollView(
+          physics: ClampingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               _buildTopLogo(context),
               ..._buildLogoText(context),
-              _buildTextField(context, emailController, "Email", false),
-              _buildTextField(context, pwdController, "Password", true),
+              _buildTextField(context, emailController, true, false),
+              _buildTextField(context, pwdController, false, pwdSecure),
               _buildActionButton(context),
               _buildForgetPwd(context),
-              _buildExplainText(context),
-              _buildSocialLogin(context),
+              SizedBox(height: 110.lyHeight,),
+              SignInSocialWidget(),
               _buildBottomSignUp(context)
             ],
           ),
@@ -90,8 +96,34 @@ class _LYSignInPageState extends State<LYSignInPage> {
   }
   /// 创建两个输入框
   Widget _buildTextField(BuildContext context, TextEditingController controller,
-      String placeholder, bool isSecure)
+      bool isEmail, bool isSecure)
   {
+    final placeholder = isEmail ? "Email" : "Password";
+    final appColor = LYAppColor(context);
+    final suffixIcon = ((controller.text ?? "") == "")
+      ? null
+      : isEmail
+        ? GestureDetector(
+            onTap: (){
+              emailController.text = "";
+              pwdController.text = "";
+              pwdSecure = true;
+              setState(() {});
+            },
+            child: Icon(
+              Icons.close,
+              color: appColor.primaryText,
+            )
+          )
+        : GestureDetector(
+            onTap: (){
+              setState(() {pwdSecure = !pwdSecure;});
+            },
+            child: Icon(
+              Icons.remove_red_eye,
+              color: isSecure?appColor.primaryText:appColor.primaryElement
+            ),
+        );
     final inputDecoration = InputDecoration(
       hintStyle: TextStyle(
         fontFamily: "Avenir",
@@ -101,14 +133,9 @@ class _LYSignInPageState extends State<LYSignInPage> {
       ),
       hintText: placeholder,
       icon: SizedBox(width: 5.lyWidth),
-      // 当输入框中有内容时，出现一个清除按钮
-      suffixIcon: (controller.text != "")
-          ? GestureDetector(
-              child: Icon(Icons.close,color: LYAppColor(context).primaryText),
-              onTap: ()=>setState((){controller.text = "";}),
-            )
-          : null,
-      border: InputBorder.none
+      // 当邮箱输入框中有内容时，出现一个清除按钮，密码输入框中有内容时，出现一个眼图标
+      suffixIcon: suffixIcon,
+      border: InputBorder.none,
     );
 
     return Container(
@@ -148,7 +175,7 @@ class _LYSignInPageState extends State<LYSignInPage> {
             color: LYAppColor(context).thirdElement,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6.lyWidth)),
             child: Text("Sign up", style: textStyle),
-            onPressed: ()=>print("登录"),
+            onPressed: _handleSignUp,
           ),
         ),
         Container(
@@ -159,7 +186,7 @@ class _LYSignInPageState extends State<LYSignInPage> {
             color: LYAppColor(context).primaryElement,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6.lyWidth)),
             child: Text("Sign in", style: textStyle),
-            onPressed: ()=>print("注册"),
+            onPressed: _handleSignIn,
           ),
         )
       ],
@@ -180,63 +207,10 @@ class _LYSignInPageState extends State<LYSignInPage> {
       ),
     );
   }
-  /// 说明文字
-  Widget _buildExplainText(BuildContext context) {
-    const explainText = "Or sign in with social networks";
-    return Container(
-      margin: EdgeInsets.only(top: 110.lyHeight,bottom: 20.lyHeight),
-      child: Text(explainText, style: TextStyle(
-        fontFamily: "Avenir",
-        fontWeight: FontWeight.normal,
-        fontSize: 16.lyFont,
-        color: LYAppColor(context).primaryText
-      )),
-    );
-  }
-  /// 社交登录按钮
-  Widget _buildSocialLogin(BuildContext context) {
-    final btn = (String icon, String url) {
-      return GestureDetector(
-        onTap: ()=>print("点击了$url"),
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Container(
-              width: 88.lyWidth,
-              height: 44.lyHeight,
-              decoration: BoxDecoration(
-                color: LYAppColor(context).primaryBackground,
-                borderRadius: BorderRadius.circular(6.lyWidth),
-                border: Border.all(
-                  color: LYAppColor(context).borderColor1,
-                  width: 1.lyWidth
-                )
-              ),
-            ),
-            Image.asset("assets/images/$icon.png",
-              height: 24.lyWidth,
-              width: 24.lyWidth,
-              fit: BoxFit.fill,
-            )
-          ]
-
-        ),
-      );
-    };
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        btn("signin_twitter", "推特"), SizedBox(width: 15.lyWidth,),
-        btn("signin_google", "谷歌"), SizedBox(width: 15.lyWidth,),
-        btn("signin_facebook", "Facebook")
-      ],
-    );
-  }
   /// 底部的注册按钮
   Widget _buildBottomSignUp(BuildContext context) {
     return GestureDetector(
-      onTap: ()=>print("注册"),
+      onTap: _handleSignUp,
       child: Container(
         width: 295.lyWidth,
         height: 44.lyHeight,
@@ -254,5 +228,23 @@ class _LYSignInPageState extends State<LYSignInPage> {
         )),
       ),
     );
+  }
+
+  _handleSignIn() async {
+    FocusScope.of(context).requestFocus(FocusNode());
+    if (signDisabled) {return;}
+    signDisabled = true;
+    final email = emailController.text;
+    final pwd = pwdController.text;
+    if (!isEmail(email)) {await LYToast.showToast(context, "请输入正确的邮箱地址");signDisabled=false;return;}
+    if (pwd == null||pwd.isEmpty) {await LYToast.showToast(context, "请输入密码");signDisabled=false;return;}
+    if (pwd.length<8||pwd.length>16) {await LYToast.showToast(context, "密码错误");signDisabled=false;return;}
+
+    signDisabled = false;
+    return;
+  }
+
+  _handleSignUp() {
+    Navigator.pushNamed(context, "/sign-up");
   }
 }

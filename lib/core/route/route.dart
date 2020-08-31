@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_news/ui/pages/sign_in/sign_in.dart';
+import 'package:flutter_news/ui/pages/sign_up/sign_up.dart';
 import 'package:flutter_news/ui/pages/welcome/welcome.dart';
 
 class LYRoute {
@@ -8,7 +9,8 @@ class LYRoute {
 
   static final routes = {
     LYWelcomePage.routeName: (context) => LYWelcomePage(),
-    LYSignInPage.routeName: (context) => LYSignInPage()
+    LYSignInPage.routeName: (context) => LYSignInPage(),
+    LYSignUpPage.routeName: (context) => LYSignUpPage()
   };
 
   // ignore: top_level_function_literal_block
