@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_news/core/extensions/extension.dart';
 
 import 'package:flutter_news/core/color/color.dart';
+import 'package:flutter_news/core/storage/global_storage.dart';
 import 'package:flutter_news/core/utils/screen_util.dart';
 import 'package:flutter_news/ui/pages/sign_in/sign_in.dart';
 
@@ -15,7 +16,6 @@ class LYWelcomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    LYScreenUtil.init(context, uiWidth: 376, uiHeight: 812);
     return Scaffold(
       backgroundColor: LYAppColor(context).primaryBackground,
       body: Column(
@@ -95,7 +95,8 @@ class LYWelcomePage extends StatelessWidget {
         textColor: LYAppColor(context).primaryElementText,
         child: Text("Get Started", style: TextStyle(fontSize: 18.lyFont)),
         onPressed: (){
-          Navigator.of(context).pushNamed(LYSignInPage.routeName);
+          GlobalStorage.showWelcome = false;
+          Navigator.of(context).pushReplacementNamed(LYSignInPage.routeName);
           print("点击了开始按钮");
         },
       ),
