@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_news/core/color/color.dart';
+import 'package:flutter_news/core/assets/color.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_news/core/extensions/extension.dart';
 

@@ -1,9 +1,9 @@
 
 import 'package:flutter/material.dart';
 
-class LYAppColor {
+class AppColor {
   final BuildContext context;
-  LYAppColor(this.context);
+  AppColor(this.context);
 
   int get index {
     final isDark = Theme.of(context).brightness == Brightness.dark;

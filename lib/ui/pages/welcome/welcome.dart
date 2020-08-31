@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_news/core/assets/font.dart';
 import 'package:flutter_news/core/extensions/extension.dart';
 
-import 'package:flutter_news/core/color/color.dart';
+import 'package:flutter_news/core/assets/color.dart';
 import 'package:flutter_news/core/storage/global_storage.dart';
 import 'package:flutter_news/core/utils/screen_util.dart';
 import 'package:flutter_news/ui/pages/sign_in/sign_in.dart';
@@ -17,7 +18,7 @@ class LYWelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: LYAppColor(context).primaryBackground,
+      backgroundColor: AppColor(context).primaryBackground,
       body: Column(
         children: [
           _buildHeaderTitle(context),
@@ -35,12 +36,7 @@ class LYWelcomePage extends StatelessWidget {
   Widget _buildHeaderTitle(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(top: (60+44).lyHeight),
-      child: Text("Features", style: TextStyle(
-        color: LYAppColor(context).primaryText,
-        fontFamily: "Montserrat",
-        fontWeight: FontWeight.w600,
-        fontSize: 24.lyFont,
-      )),
+      child: Text("Features", style: AppFont.montserratSemiBold(24.lyFont, AppColor(context).primaryText))
     );
   }
 
@@ -49,12 +45,7 @@ class LYWelcomePage extends StatelessWidget {
       width: 242.lyWidth,
       height: 70.lyHeight,
       margin: EdgeInsets.only(top: 14.lyHeight),
-      child: Text(_headerDetailText, style: TextStyle(
-        color: LYAppColor(context).primaryText,
-        fontFamily: "Avenir",
-        fontWeight: FontWeight.normal,
-        fontSize: 16.lyFont
-      )),
+      child: Text(_headerDetailText, style: AppFont.avenirBook(16.lyFont, AppColor(context).primaryText)),
     );
   }
 
@@ -73,12 +64,7 @@ class LYWelcomePage extends StatelessWidget {
             width: 195.lyWidth,
             height: 70.lyHeight,
             margin: EdgeInsets.only(left: 20.lyWidth),
-            child: Text(text, style: TextStyle(
-              color: LYAppColor(context).primaryText,
-              fontFamily: "Avenir",
-              fontWeight: FontWeight.normal,
-              fontSize: 16.lyFont
-            )),
+            child: Text(text, style: AppFont.avenirBook(16.lyFont, AppColor(context).primaryText)),
           )
         ],
       ),
@@ -91,8 +77,8 @@ class LYWelcomePage extends StatelessWidget {
       width: 295.lyWidth,
       height: 44.lyHeight,
       child: FlatButton(
-        color: LYAppColor(context).primaryElement,
-        textColor: LYAppColor(context).primaryElementText,
+        color: AppColor(context).primaryElement,
+        textColor: AppColor(context).primaryElementText,
         child: Text("Get Started", style: TextStyle(fontSize: 18.lyFont)),
         onPressed: (){
           GlobalStorage.showWelcome = false;

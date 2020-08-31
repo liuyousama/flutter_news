@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_news/core/color/color.dart';
+import 'package:flutter_news/core/assets/color.dart';
 import 'package:flutter_news/core/extensions/extension.dart';
 
 class SignInSocialWidget extends StatelessWidget {
@@ -22,7 +22,7 @@ class SignInSocialWidget extends StatelessWidget {
           fontFamily: "Avenir",
           fontWeight: FontWeight.normal,
           fontSize: 16.lyFont,
-          color: LYAppColor(context).primaryText
+          color: AppColor(context).primaryText
       )),
     );
   }
@@ -38,10 +38,10 @@ class SignInSocialWidget extends StatelessWidget {
                 width: 88.lyWidth,
                 height: 44.lyHeight,
                 decoration: BoxDecoration(
-                    color: LYAppColor(context).primaryBackground,
+                    color: AppColor(context).primaryBackground,
                     borderRadius: BorderRadius.circular(6.lyWidth),
                     border: Border.all(
-                        color: LYAppColor(context).borderColor1,
+                        color: AppColor(context).borderColor1,
                         width: 1.lyWidth
                     )
                 ),

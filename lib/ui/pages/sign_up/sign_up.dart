@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_news/core/color/color.dart';
+import 'package:flutter_news/core/assets/color.dart';
+import 'package:flutter_news/core/assets/font.dart';
 import 'package:flutter_news/core/extensions/extension.dart';
 import 'package:flutter_news/ui/widgets/sign_in_social.dart';
 
@@ -21,7 +22,7 @@ class _LYSignUpPageState extends State<LYSignUpPage> {
     return GestureDetector(
       onTap: ()=>FocusScope.of(context).requestFocus(FocusNode()),
       child: Scaffold(
-        backgroundColor: LYAppColor(context).primaryBackground,
+        backgroundColor: AppColor(context).primaryBackground,
         appBar: _buildAppBar(context),
         // SingleChildScrollView：键盘弹出可滚动
         body: SingleChildScrollView(
@@ -48,15 +49,15 @@ class _LYSignUpPageState extends State<LYSignUpPage> {
 
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
-      backgroundColor:LYAppColor(context).primaryBackground,
+      backgroundColor:AppColor(context).primaryBackground,
       elevation: 2,
       toolbarHeight: 44.lyHeight,
       actions: [IconButton(
-        icon: Icon(Icons.info_outline, size: 24, color: LYAppColor(context).primaryText),
+        icon: Icon(Icons.info_outline, size: 24, color: AppColor(context).primaryText),
         onPressed: ()=>print("点击了info按钮"),
       )],
       leading: IconButton(
-        icon: Icon(Icons.arrow_back, size: 24, color: LYAppColor(context).primaryText,),
+        icon: Icon(Icons.arrow_back, size: 24, color: AppColor(context).primaryText,),
         onPressed: _handlePopToSignUp,
       ),
     );
@@ -66,12 +67,7 @@ class _LYSignUpPageState extends State<LYSignUpPage> {
     return Container(
       margin: EdgeInsets.only(top: 50.lyHeight),
       alignment: Alignment.center,
-      child: Text("Signup", style: TextStyle(
-        fontFamily: "Montserrat",
-        fontWeight: FontWeight.w600,
-        fontSize: 24.lyFont,
-        color: LYAppColor(context).primaryText
-      ),),
+      child: Text("Signup", style: AppFont.montserratSemiBold(24.lyFont, AppColor(context).primaryText)),
     );
   }
 
@@ -79,7 +75,7 @@ class _LYSignUpPageState extends State<LYSignUpPage> {
       int index, bool isSecure)
   {
     final placeholder = ["Full Name", "Email", "Password"][index];
-    final appColor = LYAppColor(context);
+    final appColor = AppColor(context);
     final suffixIcon = (index!=2||pwdController.text == null||pwdController.text=="")
         ? null
         : GestureDetector(
@@ -87,12 +83,7 @@ class _LYSignUpPageState extends State<LYSignUpPage> {
           onTap: (){setState(() {pwdSecure = !pwdSecure;});},
         );
     final inputDecoration = InputDecoration(
-      hintStyle: TextStyle(
-          fontFamily: "Avenir",
-          color: LYAppColor(context).primaryText,
-          fontWeight: FontWeight.normal,
-          fontSize: 18.lyFont
-      ),
+      hintStyle: AppFont.avenirBook(18.lyFont, AppColor(context).primaryText),
       hintText: placeholder,
       icon: SizedBox(width: 5.lyWidth),
       // 当邮箱输入框中有内容时，出现一个清除按钮，密码输入框中有内容时，出现一个眼图标
@@ -106,7 +97,7 @@ class _LYSignUpPageState extends State<LYSignUpPage> {
       margin: EdgeInsets.only(bottom: 15),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(6.lyWidth),
-        color: LYAppColor(context).secondaryElement,
+        color: AppColor(context).secondaryElement,
       ),
       child: TextField(
         decoration: inputDecoration,
@@ -125,28 +116,20 @@ class _LYSignUpPageState extends State<LYSignUpPage> {
       width: 295.lyWidth,
       child: FlatButton(
         onPressed: ()=>print("注册"),
-        color: LYAppColor(context).primaryElement,
+        color: AppColor(context).primaryElement,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6.lyWidth)),
-        child: Text("Create an account", style: TextStyle(
-          fontFamily: "Montserrat",
-          color: LYAppColor(context).primaryElementText,
-          fontWeight: FontWeight.w600,
-          fontSize: 18.lyFont
-        ),),
+        child: Text(
+            "Create an account",
+            style: AppFont.montserratSemiBold(18.lyFont, AppColor(context).primaryElementText)
+        ),
       ),
     );
   }
 
   Widget _buildComplainText(BuildContext context) {
-    final normalStyle = TextStyle(
-      fontFamily: "Aveni",
-      fontSize: 16.lyFont,
-      fontWeight: FontWeight.normal,
-      color: LYAppColor(context).primaryText,
-      height: 1.3.lyHeight
-    );
+    final normalStyle = AppFont.avenirBook(16.lyFont, AppColor(context).primaryText);
     final highlightStyle = normalStyle.copyWith(
-      color: LYAppColor(context).primaryElement
+      color: AppColor(context).primaryElement
     );
 
     return Container(
@@ -182,15 +165,13 @@ class _LYSignUpPageState extends State<LYSignUpPage> {
         alignment: Alignment.center,
         margin: EdgeInsets.only(top: 40.lyHeight),
         decoration: BoxDecoration(
-            color: LYAppColor(context).secondaryElement,
+            color: AppColor(context).secondaryElement,
             borderRadius: BorderRadius.circular(6.lyWidth)
         ),
-        child: Text("I have an account", style: TextStyle(
-            fontFamily: "Montserrat",
-            fontWeight: FontWeight.w500,
-            color: LYAppColor(context).primaryText,
-            fontSize: 16.lyFont
-        )),
+        child: Text(
+            "I have an account",
+            style: AppFont.montserratMedium(16.lyFont, AppColor(context).primaryText)
+        ),
       ),
     );
   }
