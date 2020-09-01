@@ -5,13 +5,14 @@ import 'package:flutter_news/core/network/http.dart';
 
 class NewsApi {
   /// 分类列表
-  static Future<List<CategoryModel>> getCategories() async {
-    final data = await LYHttp().get("/categories");
+  /// 默认使用磁盘缓存，传入refresh为true或磁盘缓存中无数据时才会真正地通过网络请求刷新数据
+  static Future<List<CategoryModel>> getCategories({bool refresh=false}) async {
+    final data = await LYHttp().get("/categories", cacheDisk: true, isRefresh: refresh);
     return (data as List).map((e) => CategoryModel.fromJson(e)).toList();
   }
   /// 分类列表
-  static Future<List<CategoryModel>> getChannels() async {
-    final data = await LYHttp().get("/channels");
+  static Future<List<CategoryModel>> getChannels({bool refresh=false}) async {
+    final data = await LYHttp().get("/channels", isList: true, isRefresh: refresh);
     return (data as List).map((e) => CategoryModel.fromJson(e)).toList();
   }
   /// 标签列表

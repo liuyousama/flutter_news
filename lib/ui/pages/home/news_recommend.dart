@@ -34,6 +34,7 @@ Widget buildNewsRecommend(BuildContext context, NewsItemModel model) {
           margin: EdgeInsets.only(top: 10.lyHeight, bottom: 10.lyHeight),
           child: Text(
             model.title,
+            maxLines: 3,
             style: AppFont.montserratSemiBold(24.lyFont, AppColor(context).primaryText),
           ),
         ),

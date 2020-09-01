@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_news/core/model/error_model.dart';
 import 'package:flutter_news/core/network/consts.dart';
-import 'package:flutter_news/core/network/ram_cache.dart';
+import 'package:flutter_news/core/network/net_cache.dart';
 import 'package:flutter_news/core/storage/global_storage.dart';
 
 class LYHttp {
@@ -37,19 +39,31 @@ class LYHttp {
     cancelToken = CancelToken();
 
     _dio.interceptors.add(InterceptorsWrapper(onRequest: (options) {
-      print("发起请求");
       final userProfile = GlobalStorage.userProfile;
       if (userProfile != null) options.headers["Authorization"] = userProfile.accessToken;
       return options;
     }, onResponse: (res) {
-      print("收到响应");
       return res;
     }, onError: (e) {
       print("发生错误: $e");
       return e;
     }));
     // 添加内存缓存interceptor
-    _dio.interceptors.add(LYRamCache());
+    _dio.interceptors.add(LYNetCache());
+
+    assert((){
+      if (!PROXY_ENABLE) return true;
+      (_dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (client) {
+        client.findProxy = (uri) {
+          return "PROXY $PROXY_IP:$PROXY_PORT";
+        };
+        //代理工具会提供一个抓包的自签名证书，会通不过证书校验，所以我们禁用证书校验
+        client.badCertificateCallback =
+            (X509Certificate cert, String host, int port) => true;
+      };
+
+      return true;
+    }());
   }
 
   Future get(String path, {
@@ -58,14 +72,16 @@ class LYHttp {
     CancelToken cancelToken,
     bool isRefresh = false,
     bool isList = false,
-    bool cacheOpen = true,
+    bool cacheRam = true,
+    bool cacheDisk = false,
     String cacheKey
   }) async {
     try {
       options = options ?? Options();
       options.extra["refresh"] = isRefresh;
       options.extra["list"] = isList;
-      options.extra["cache"] = cacheOpen;
+      options.extra["cacheRam"] = cacheRam;
+      options.extra["cacheDisk"] = cacheDisk;
       options.extra["cacheKey"] = cacheKey;
       var response = await _dio.get(path,
         queryParameters: query,

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_news/core/assets/color.dart';
 import 'package:flutter_news/core/assets/font.dart';
@@ -36,8 +38,13 @@ class _LYHomePageState extends State<LYHomePage> {
     _initData();
   }
   void _initData() async {
+    // 分类数据：先尝试从磁盘缓存中读取数据
     categories= await NewsApi.getCategories();
     setState((){});
+    // 3秒后尝试从网络上更新数据
+    Timer(Duration(seconds: 3), () async {
+      categories = await NewsApi.getCategories(refresh: true);
+    });
     recommend = await NewsApi.getRecommend();
     setState((){});
     newsList = await NewsApi.getNewsList();
