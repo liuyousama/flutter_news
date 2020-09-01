@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_news/core/model/error_model.dart';
 import 'package:flutter_news/core/network/consts.dart';

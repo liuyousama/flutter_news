@@ -38,7 +38,12 @@ class AppColor {
   /// 第三种控件-文本 浅灰色2
   Color get thirdElementText =>
       [Color.fromARGB(255, 141, 141, 142),Color.fromARGB(255, 141, 141, 142)][index];
-
+  /// 第四种控件
+  Color get forthElement =>
+      [Color.fromARGB(255, 186, 186, 186),Color.fromARGB(255, 186, 186, 186)][index];
+  /// tabBar 默认颜色 灰色
+  Color get tabBarElement =>
+      [Color.fromARGB(255, 208, 208, 208),Color.fromARGB(255, 208, 208, 208)][index];
 
   Color get borderColor1 =>
       [Color.fromARGB(255, 230, 230, 231),Color.fromARGB(255, 230, 230, 231)][index];
