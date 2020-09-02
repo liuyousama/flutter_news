@@ -1,13 +1,9 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_news/core/assets/color.dart';
-import 'package:flutter_news/core/assets/font.dart';
 import 'package:flutter_news/core/model/news/category.dart';
 import 'package:flutter_news/core/model/news/news_item.dart';
 import 'package:flutter_news/core/model/news/news_list.dart';
 import 'package:flutter_news/core/network/api/api.dart';
-import 'package:flutter_news/core/extensions/extension.dart';
 import 'package:flutter_news/ui/pages/home/buildNewsChannel.dart';
 import 'package:flutter_news/ui/pages/home/category_list.dart';
 import 'package:flutter_news/ui/pages/home/news_item.dart';
@@ -28,8 +24,12 @@ class _LYHomePageState extends State<LYHomePage> {
   int cateSelIndex = 0;
 
   int get newsCount {
-    if (newsList != null) return newsList.items.length ?? 0;
-    else return 0;
+    if (newsList != null) return newsList.items.length ?? 3;
+    else return 5;
+  }
+  NewsItemModel getNewsItem(int index) {
+    if (newsList == null) return null;
+    else return newsList.items[index];
   }
 
   @override
@@ -44,11 +44,22 @@ class _LYHomePageState extends State<LYHomePage> {
     // 3秒后尝试从网络上更新数据
     Timer(Duration(seconds: 3), () async {
       categories = await NewsApi.getCategories(refresh: true);
+      setState((){});
     });
-    recommend = await NewsApi.getRecommend();
-    setState((){});
-    newsList = await NewsApi.getNewsList();
-    setState((){});
+    // 延时：模拟网络速度缓慢的情况，出现骨架屏
+    Timer(Duration(seconds: 5), () async {
+      recommend = await NewsApi.getRecommend();
+      setState((){});
+    });
+    Timer(Duration(seconds: 5), () async {
+      newsList = await NewsApi.getNewsList();
+      setState((){});
+    });
+
+//    recommend = await NewsApi.getRecommend();
+//    setState((){});
+//    newsList = await NewsApi.getNewsList();
+//    setState((){});
   }
 
   @override
@@ -63,29 +74,49 @@ class _LYHomePageState extends State<LYHomePage> {
         ),
         Expanded(
           flex: 1,
-          child: ListView.separated(
-              itemBuilder: _listItemBuilder,
-              separatorBuilder: _listSeparatorBuilder,
-              itemCount: newsCount + 3
-          ),
+          child: _buildCustomListView(context),
         )
       ],
     );
   }
 
-  Widget _listItemBuilder(BuildContext context, int index) {
-    if (index == 0) {
-      return buildNewsRecommend(context, recommend);
-    }else if (index == 1) {
-      return buildNewsChannel(context);
-    } else if (index<newsCount + 2) {
-      return buildNewsItem(context, newsList.items[index-2]);
-    } else {
-      return buildNewsLetter(context);
-    }
-  }
-
-  Widget _listSeparatorBuilder(BuildContext context, int index) {
-    return Divider(height: 1.lyHeight, color: AppColor(context).borderColor1,);
+  Widget _buildCustomListView(BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              return buildNewsRecommend(context, recommend);
+            },
+            childCount: 1
+          ),
+        ),
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                return buildNewsChannel(context);
+              },
+              childCount: 1,
+          ),
+        ),
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              return buildNewsItem(context, getNewsItem(index));
+            },
+            childCount: newsCount
+          ),
+        ),
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              print("开始构建邮件");
+              return buildNewsLetter(context);
+            },
+            childCount: 1
+          ),
+        ),
+      ],
+    );
   }
 }

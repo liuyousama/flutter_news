@@ -34,7 +34,10 @@ dependencies:
   fluttertoast: ^7.0.4
   # 本地存储
   shared_preferences: ^0.5.10
+  # 网络图片加载
   cached_network_image: ^2.0.0
+  # 骨架屏
+  skeleton_text: ^1.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

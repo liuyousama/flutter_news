@@ -4,9 +4,10 @@ import 'package:flutter_news/core/assets/font.dart';
 import 'package:flutter_news/core/extensions/extension.dart';
 import 'package:flutter_news/core/model/news/news_item.dart';
 import 'package:flutter_news/ui/widgets/cached_image.dart';
+import 'package:flutter_news/ui/widgets/skeleton.dart';
 
 Widget buildNewsItem(BuildContext context, NewsItemModel model) {
-  return model == null ? Container()
+  return model == null ? _buildNewsItemSkeleton()
   : Container(
     padding: EdgeInsets.symmetric(horizontal: 20.lyWidth, vertical: 20.lyHeight),
     height: 161.lyHeight,
@@ -25,6 +26,7 @@ Widget buildNewsItem(BuildContext context, NewsItemModel model) {
         SizedBox(
           width: 194.lyWidth,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 model.author,
@@ -58,11 +60,34 @@ Widget buildNewsItem(BuildContext context, NewsItemModel model) {
                   )
                 ],
               )
-
             ],
           ),
         )
       ],
     ),
+  );
+}
+
+Widget _buildNewsItemSkeleton() {
+  return Container(
+    padding: EdgeInsets.symmetric(horizontal: 20.lyWidth, vertical: 20.lyHeight),
+    height: 161.lyHeight,
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        skeleton(width: 121.lyWidth, height: 121.lyHeight),
+        SizedBox(width: 20.lyWidth),
+        SizedBox(
+          width: 194.lyWidth,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              skeleton(width: 194.lyWidth, height: 23.3.lyHeight, margin: EdgeInsets.symmetric(vertical: 5.lyHeight)),
+              skeleton(width: 100.lyWidth, height: 23.3.lyHeight, margin: EdgeInsets.symmetric(vertical: 5.lyHeight)),
+            ],
+          )
+        )
+      ]
+    )
   );
 }
